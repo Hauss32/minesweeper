@@ -7,8 +7,8 @@ class Cell
     end
 
     def render_value
-        return "X" if @is_mine
-        return '_' if @is_hidden
+        # return "X" if @is_mine
+        return '🀆' if @is_hidden
         return '⚠︎' if @is_flagged
         return @count_mines_nearby.to_s if @count_mines_nearby
 

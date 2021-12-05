@@ -29,9 +29,12 @@ class Board
     end
 
     def render
-        @grid.each do |row|
-            cells = row.map { |cell| cell.render_value }
-            puts cells.join(" ")
+        idxs = (0...@grid.length).to_a
+
+        puts "  #{idxs.join(" ")}"
+        idxs.each do |y_idx|
+            cells = @grid[y_idx].map { |cell| cell.render_value }
+            puts "#{y_idx.to_s} #{cells.join(" ")}"
         end
     end
 
