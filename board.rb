@@ -2,7 +2,7 @@ require_relative "cell"
 require "byebug"
 
 class Board
-    def initialize(size)
+    def initialize(size=9)
         @grid = Array.new(size) { Array.new(size) { Cell.new } }
     end
 
@@ -66,6 +66,27 @@ class Board
         pos_str_arr.map(&:to_i)
     end
 
+    def get_all_adj_cells(pos)
+        y,x = pos
+        adj_cells = []
+
+        (y-1..y+1).to_a.each do |y_idx|
+            row_cells = [y_idx].product((x-1..x+1).to_a)
+            adj_cells += row_cells
+        end
+
+        adj_cells.delete(pos)
+
+        self.filter_to_valid_cells(adj_cells)
+    end
+
+    def filter_to_valid_cells(cells)
+        valids = cells.select { |cell| self.valid_cell?(cell) }
+        empties = valids.select { |cell| self[cell].empty? }
+
+        empties
+    end
+
     def valid_cell?(pos)
         idxs = (0...@grid.length).to_a
         y, x = pos
@@ -83,5 +104,6 @@ end
 board = Board.new(9)
 board.add_mines
 board.render
-board.make_move
-p board.game_lost?
+# board.make_move
+# p board.game_lost?
+# p board.get_all_adj_cells([3,0])

@@ -21,6 +21,10 @@ class Cell
         false
     end
 
+    def empty?
+        @is_hidden && @count_mines_nearby.nil?
+    end
+
     def toggle_flag
         if !@is_hidden
             puts "Looks like this cell is already revealed."
