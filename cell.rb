@@ -1,4 +1,5 @@
 class Cell
+    attr_reader :is_mine
     def initialize
         @is_hidden = true
         @is_mine = false
@@ -10,6 +11,7 @@ class Cell
         # return "X" if @is_mine
         return '🀆' if @is_hidden
         return '⚠︎' if @is_flagged
+        return '✘' if self.revealed_mine?
         return @count_mines_nearby.to_s if @count_mines_nearby
 
         return ' '

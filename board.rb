@@ -36,6 +36,8 @@ class Board
             cells = @grid[y_idx].map { |cell| cell.render_value }
             puts "#{y_idx.to_s} #{cells.join(" ")}"
         end
+
+        nil
     end
 
     def make_move(pos=self.get_input)
@@ -102,11 +104,21 @@ class Board
             row.any? { |cell| cell.revealed_mine? }
         end
     end
+
+    def test_show_mines
+        mines = []
+
+        (0...@grid.length).each do |y|
+            (0...@grid.length).each { |x| mines << [y,x] if self[[y,x]].is_mine }
+        end
+
+        mines
+    end
 end
 
 board = Board.new(9)
 board.add_mines
 board.render
-# board.make_move
-# p board.game_lost?
-# p board.get_all_adj_cells([3,0])
+p board.test_show_mines
+board.make_move
+p board.render
