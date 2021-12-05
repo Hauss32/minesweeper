@@ -1,4 +1,5 @@
 require_relative "cell"
+require "byebug"
 
 class Board
     def initialize(size)
@@ -71,9 +72,16 @@ class Board
         
         idxs.include?(y) && idxs.include?(x)
     end
+
+    def game_lost?
+        @grid.any? do |row|
+            row.any? { |cell| cell.revealed_mine? }
+        end
+    end
 end
 
 board = Board.new(9)
 board.add_mines
 board.render
 board.make_move
+p board.game_lost?
