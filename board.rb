@@ -33,8 +33,47 @@ class Board
             puts cells.join(" ")
         end
     end
+
+    def make_move(pos=self.get_input)
+        cell_reveal = self[pos].reveal
+
+        unless cell_reveal
+            puts "That cell is already revealed."
+            return false
+        end
+
+        true
+    end
+
+    def get_input
+        puts "\nChoose a cell to reveal. Format as Row,Col (e.g. 1,4)"
+
+        input = gets.chomp
+        pos = self.parse_input(input)
+
+        while !self.valid_cell?(pos)
+            puts "\nThat cell position isn't valid. Please try again."
+            pos = self.get_input
+        end
+
+        pos
+    end
+
+    def parse_input(input)
+        pos_str_arr = input.split(",")
+
+        pos_str_arr.map(&:to_i)
+    end
+
+    def valid_cell?(pos)
+        idxs = (0...@grid.length).to_a
+        y, x = pos
+        
+        idxs.include?(y) && idxs.include?(x)
+    end
 end
 
 board = Board.new(9)
 board.add_mines
 board.render
+board.make_move

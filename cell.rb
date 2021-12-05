@@ -10,11 +10,13 @@ class Cell
         return '_' if @is_hidden
         return '⚠︎' if @is_flagged
         return @count_mines_nearby.to_s if @count_mines_nearby
+
+        return ' '
     end
 
     def toggle_flag
         if !@is_hidden
-            puts "Looks like this cell is already shown."
+            puts "Looks like this cell is already revealed."
             return false
         else
             @is_flagged = !@is_flagged
@@ -23,5 +25,13 @@ class Cell
 
     def add_mine
         @is_mine = true
+    end
+
+    def reveal
+        return false unless @is_hidden
+
+        @is_hidden = false
+
+        true
     end
 end
