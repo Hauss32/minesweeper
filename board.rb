@@ -31,7 +31,7 @@ class Board
     def render
         idxs = (0...@grid.length).to_a
 
-        puts "  #{idxs.join(" ")}"
+        puts "\n  #{idxs.join(" ")}"
         idxs.each do |y_idx|
             cells = @grid[y_idx].map { |cell| cell.render_value }
             puts "#{y_idx.to_s} #{cells.join(" ")}"
@@ -71,6 +71,15 @@ class Board
         pos_str_arr.map(&:to_i)
     end
 
+    def count_mines_nearby(pos)
+        adj_cells = self.get_all_adj_cells(pos)
+        mines_count = adj_cells.count { |cell| self[cell].is_mine }
+        puts "Mines Nearby: #{mines_count}"
+
+        cell = self[pos]
+        cell.set_mines_count(mines_count)
+    end
+
     def get_all_adj_cells(pos)
         y,x = pos
         adj_cells = []
@@ -82,10 +91,10 @@ class Board
 
         adj_cells.delete(pos)
 
-        self.filter_to_valid_cells(adj_cells)
+        adj_cells
     end
 
-    def filter_to_valid_cells(cells)
+    def filter_to_empty_cells(cells)
         valids = cells.select { |cell| self.valid_cell?(cell) }
         empties = valids.select { |cell| self[cell].empty? }
 
@@ -120,5 +129,6 @@ board = Board.new(9)
 board.add_mines
 board.render
 p board.test_show_mines
+board.count_mines_nearby([1,1])
 board.make_move
 p board.render

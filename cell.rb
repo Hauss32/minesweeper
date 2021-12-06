@@ -1,10 +1,16 @@
 class Cell
     attr_reader :is_mine
+
     def initialize
         @is_hidden = true
         @is_mine = false
         @count_mines_nearby = nil
         @is_flagged = false
+    end
+
+    def set_mines_count(num)
+        @count_mines_nearby = num if num > 0
+        self.reveal
     end
 
     def render_value
