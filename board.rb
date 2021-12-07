@@ -71,6 +71,16 @@ class Board
         pos_str_arr.map(&:to_i)
     end
 
+    def set_nearby_cells(pos)
+        adj_cells = self.get_valid_adj_cells(pos)
+
+        adj_cells.each do |adj_cell|
+             cell = self[adj_cell]
+             nearby_mines = self.count_mines_nearby(adj_cell)
+             cell.set_mines_count(nearby_mines) if cell.empty?
+        end
+    end
+
     def count_mines_nearby(pos)
         adj_cells = self.get_all_adj_cells(pos)
         mines_count = adj_cells.count { |cell| self[cell].is_mine }
@@ -78,6 +88,13 @@ class Board
 
         cell = self[pos]
         cell.set_mines_count(mines_count)
+    end
+
+    def get_valid_adj_cells(pos)
+        all_adj_cells = self.get_all_adj_cells(pos)
+        valids = all_adj_cells.select { |cell| self.valid_cell?(cell) }
+
+        valids
     end
 
     def get_all_adj_cells(pos)
@@ -92,13 +109,6 @@ class Board
         adj_cells.delete(pos)
 
         adj_cells
-    end
-
-    def filter_to_empty_cells(cells)
-        valids = cells.select { |cell| self.valid_cell?(cell) }
-        empties = valids.select { |cell| self[cell].empty? }
-
-        empties
     end
 
     def valid_cell?(pos)
@@ -129,6 +139,5 @@ board = Board.new(9)
 board.add_mines
 board.render
 p board.test_show_mines
-board.count_mines_nearby([1,1])
 board.make_move
 p board.render

@@ -10,7 +10,7 @@ class Cell
 
     def set_mines_count(num)
         @count_mines_nearby = num if num > 0
-        self.reveal
+        self.reveal unless @is_mine
     end
 
     def render_value
