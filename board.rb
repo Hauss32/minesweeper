@@ -37,7 +37,7 @@ class Board
             puts "#{y_idx.to_s} #{cells.join(" ")}"
         end
 
-        nil
+        puts "\n"
     end
 
     def make_move(pos=self.get_input)
@@ -47,6 +47,8 @@ class Board
             puts "That cell is already revealed."
             return false
         end
+
+        self.set_nearby_cells(pos)
 
         true
     end
@@ -73,16 +75,22 @@ class Board
 
     def set_nearby_cells(pos)
         adj_cells = self.get_valid_adj_cells(pos)
+        has_adj_cell_mine = adj_cells.any? { |cell| self[cell].is_mine }
 
-        adj_cells.each do |adj_cell|
-             cell = self[adj_cell]
-             nearby_mines = self.count_mines_nearby(adj_cell)
-             cell.set_mines_count(nearby_mines) if cell.empty?
+        if !has_adj_cell_mine
+            adj_cells.each do |adj_cell|
+                cell = self[adj_cell]
+                nearby_mines = self.count_mines_nearby(adj_cell)
+                cell.set_mines_count(nearby_mines) if cell.empty?
+            end
+        else
+            nearby_mines = self.count_mines_nearby(pos)
+            self[pos].set_mines_count(nearby_mines)
         end
     end
 
     def count_mines_nearby(pos)
-        adj_cells = self.get_all_adj_cells(pos)
+        adj_cells = self.get_valid_adj_cells(pos)
         mines_count = adj_cells.count { |cell| self[cell].is_mine }
 
         mines_count
