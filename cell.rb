@@ -1,5 +1,5 @@
 class Cell
-    attr_reader :is_mine
+    attr_reader :is_mine, :is_hidden
 
     def initialize
         @is_hidden = true

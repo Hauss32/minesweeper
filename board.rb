@@ -75,17 +75,21 @@ class Board
 
     def set_nearby_cells(pos)
         adj_cells = self.get_valid_adj_cells(pos)
-        has_adj_cell_mine = adj_cells.any? { |cell| self[cell].is_mine }
+        adj_cells_hidden = adj_cells.select { |cell| self[cell].is_hidden}
+        has_adj_cell_mine = adj_cells_hidden.any? { |cell| self[cell].is_mine }
+        # debugger
 
-        if !has_adj_cell_mine
-            adj_cells.each do |adj_cell|
-                cell = self[adj_cell]
-                nearby_mines = self.count_mines_nearby(adj_cell)
-                cell.set_mines_count(nearby_mines) if cell.empty?
-            end
-        else
+        if has_adj_cell_mine
             nearby_mines = self.count_mines_nearby(pos)
             self[pos].set_mines_count(nearby_mines)
+            return
+        else
+            adj_cells_hidden.each do |adj_cell|
+                cell = self[adj_cell]
+                nearby_mines = self.count_mines_nearby(adj_cell)
+                cell.set_mines_count(nearby_mines)
+                self.set_nearby_cells(adj_cell)
+            end
         end
     end
 
