@@ -41,6 +41,27 @@ class Board
         puts "\n"
     end
 
+    def play
+        puts "\nWelcome to Minesweeper! There are #{@grid.length} bombs. Good luck!\n"
+        until self.game_won?
+            self.render
+            self.make_move
+
+            if self.game_lost?
+                self.render
+                puts "-------------"
+                puts "✘ GAME OVER ✘"
+                puts "-------------"
+                
+                return
+            end
+        end
+
+        puts "~~~~~~~~~~~~~~"
+        puts "  YOU WIN!!!  "
+        puts "~~~~~~~~~~~~~~"
+    end
+
     def make_move(pos=self.get_input)
         cell_reveal = self[pos].reveal
 
@@ -140,7 +161,7 @@ class Board
         count_hiddens = 0
 
         @grid.each do |row|
-            row.each { |cell| count += 1 if self[cell].is_hidden }
+            row.each { |cell| count_hiddens += 1 if cell.is_hidden }
         end
 
         count_hiddens == total_mines
@@ -158,8 +179,5 @@ class Board
 end
 
 board = Board.new(9)
-board.add_mines
-board.render
 p board.test_show_mines
-board.make_move
-p board.render
+board.play
