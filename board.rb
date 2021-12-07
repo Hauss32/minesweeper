@@ -84,10 +84,8 @@ class Board
     def count_mines_nearby(pos)
         adj_cells = self.get_all_adj_cells(pos)
         mines_count = adj_cells.count { |cell| self[cell].is_mine }
-        puts "Mines Nearby: #{mines_count}"
 
-        cell = self[pos]
-        cell.set_mines_count(mines_count)
+        mines_count
     end
 
     def get_valid_adj_cells(pos)
