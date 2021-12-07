@@ -4,6 +4,7 @@ require "byebug"
 class Board
     def initialize(size=9)
         @grid = Array.new(size) { Array.new(size) { Cell.new } }
+        self.add_mines
     end
 
     def [](pos)
@@ -132,6 +133,17 @@ class Board
         @grid.any? do |row|
             row.any? { |cell| cell.revealed_mine? }
         end
+    end
+
+    def game_won?
+        total_mines = @grid.length
+        count_hiddens = 0
+
+        @grid.each do |row|
+            row.each { |cell| count += 1 if self[cell].is_hidden }
+        end
+
+        count_hiddens == total_mines
     end
 
     def test_show_mines
