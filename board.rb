@@ -1,5 +1,4 @@
 require_relative "cell"
-require "byebug"
 
 class Board
     def initialize(size=9)
@@ -39,30 +38,6 @@ class Board
         end
 
         puts "\n"
-    end
-
-    def play
-        puts "-------------------------"
-        puts "\nWelcome to Minesweeper! There are #{@grid.length} bombs. Good luck!\n"
-        self.render
-
-        until self.game_won?
-            move = self.make_move
-            self.render if move
-
-            if self.game_lost?
-                self.render
-                puts "-------------"
-                puts "✘ GAME OVER ✘"
-                puts "-------------"
-                
-                return
-            end
-        end
-
-        puts "~~~~~~~~~~~~~~"
-        puts "  YOU WIN!!!  "
-        puts "~~~~~~~~~~~~~~"
     end
 
     def make_move(move=self.get_move_type)
@@ -194,7 +169,8 @@ class Board
 
         mines
     end
-end
 
-board = Board.new(9)
-board.play
+    def save_game
+        self.to_yaml
+    end
+end
