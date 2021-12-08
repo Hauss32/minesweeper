@@ -169,8 +169,4 @@ class Board
 
         mines
     end
-
-    def save_game
-        self.to_yaml
-    end
 end
