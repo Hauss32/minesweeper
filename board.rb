@@ -62,34 +62,50 @@ class Board
         puts "~~~~~~~~~~~~~~"
     end
 
-    def make_move(pos=self.get_input)
+    def make_move(move=self.get_move_type)
+        pos = self.get_pos_input
+
+        if move == 'f'
+            return self[pos].toggle_flag
+        end
+
         cell_reveal = self[pos].reveal
 
-        unless cell_reveal
-            puts "That cell is already revealed."
-            return false
-        end
+        return false unless cell_reveal
 
         self.set_nearby_cells(pos)
 
         true
     end
 
-    def get_input
-        puts "\nChoose a cell to reveal. Format as Row,Col (e.g. 1,4)"
+    def get_move_type
+        puts "\nType the letter 'f' to flag a cell, or type the letter 'r' to reveal a cell."
 
         input = gets.chomp
-        pos = self.parse_input(input)
+
+        until input == 'f' || input == 'r' 
+            puts "\nThat type of move isn't valid. Please try again."
+            input = self.get_move_type
+        end
+
+        input
+    end
+
+    def get_pos_input
+        puts "\nChoose a cell position. Format as Row,Col (e.g. 1,4)"
+
+        input = gets.chomp
+        pos = self.parse_pos_input(input)
 
         while !self.valid_cell?(pos)
             puts "\nThat cell position isn't valid. Please try again."
-            pos = self.get_input
+            pos = self.get_pos_input
         end
 
         pos
     end
 
-    def parse_input(input)
+    def parse_pos_input(input)
         pos_str_arr = input.split(",")
 
         pos_str_arr.map(&:to_i)
@@ -99,7 +115,6 @@ class Board
         adj_cells = self.get_valid_adj_cells(pos)
         adj_cells_hidden = adj_cells.select { |cell| self[cell].is_hidden}
         has_adj_cell_mine = adj_cells_hidden.any? { |cell| self[cell].is_mine }
-        # debugger
 
         if has_adj_cell_mine
             nearby_mines = self.count_mines_nearby(pos)

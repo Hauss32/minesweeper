@@ -10,13 +10,12 @@ class Cell
 
     def set_mines_count(num)
         @count_mines_nearby = num if num > 0
-        self.reveal unless @is_mine
+        self.reveal unless @is_mine || !is_hidden
     end
 
     def render_value
-        # return "X" if @is_mine
-        return '🀆' if @is_hidden
         return '⚠︎' if @is_flagged
+        return '🀆' if @is_hidden
         return '✘' if self.revealed_mine?
         return @count_mines_nearby.to_s if @count_mines_nearby
 
@@ -47,10 +46,18 @@ class Cell
     end
 
     def reveal
-        return false unless @is_hidden
+        if !@is_hidden
+            puts "\n--- Alert ---"
+            puts "That cell has already been revealed."
+            return false
+        elsif @is_flagged
+            puts "\n--- Alert ---"
+            puts "You've flagged this cell, so it is protected."
+            return false
+        else
+            @is_hidden = false
 
-        @is_hidden = false
-
-        true
+            return true
+        end
     end
 end
