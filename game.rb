@@ -5,7 +5,6 @@ class Game
     def initialize
         @board = nil
         self.set_board
-        @board.render
     end
 
     def set_board
@@ -57,11 +56,11 @@ class Game
 
     def play
         puts "-------------------------"
-        puts "\nReady to play?! There are #{@grid.length} bombs. Good luck!\n"
+        puts "\nReady to play?! There are 9 mines. Good luck!\n"
         @board.render
 
         until @board.game_won?
-            move = @board.make_move
+            move = self.make_move
             @board.render if move
 
             if @board.game_lost?
@@ -77,6 +76,70 @@ class Game
         puts "~~~~~~~~~~~~~~"
         puts "  YOU WIN!!!  "
         puts "~~~~~~~~~~~~~~"
+    end
+
+    def make_move(move=self.get_move_type)
+        pos = nil
+
+        case move
+        when 'r'
+            pos = self.get_pos_input
+
+            cell_reveal = @board[pos].reveal
+
+            return false unless cell_reveal
+
+            @board.set_nearby_cells(pos)
+
+        when 'f'
+            pos = self.get_pos_input
+
+            return @board[pos].toggle_flag  
+        when 's'
+            self.save
+        else
+            puts "Unknown input: '#{move}'"
+
+            return false
+        end
+
+        true
+    end
+
+    def get_move_type
+        puts "\n----"
+        puts "Type the letter 'r' to reveal a cell."
+        puts "Type the letter 'f' to flag a cell."
+        puts "Type the letter 's' to save the game."
+
+        input = gets.chomp
+
+        until input == 'f' || input == 'r' || input == 's'
+            puts "\nThat type of action isn't supported. Please try again."
+            input = self.get_move_type
+        end
+
+        input
+    end
+
+    def get_pos_input
+        puts "\nChoose a cell position. Format as Row,Col (e.g. 1,4)"
+
+        input = gets.chomp
+        pos = self.parse_pos_input(input)
+
+        while !@board.valid_cell?(pos)
+            puts "\nThat cell position isn't valid. Please try again."
+            pos = self.get_pos_input
+        end
+
+        pos
+    end
+
+    def parse_pos_input(input)
+        pos_str_arr = input.split(",")
+
+        pos_str_arr.map(&:to_i)
     end
 
     def save
@@ -100,4 +163,4 @@ class Game
 end
 
 game = Game.new
-game.save
+game.play
