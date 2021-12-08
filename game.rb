@@ -25,7 +25,7 @@ class Game
 
         begin
             board_yml = File.read(input)
-            @board = YAML::load(board_yml)
+            @board = YAML.load(board_yml)
         rescue
             puts "File not found. Please try again."
             self.get_file_and_load_board
@@ -78,6 +78,26 @@ class Game
         puts "  YOU WIN!!!  "
         puts "~~~~~~~~~~~~~~"
     end
+
+    def save
+        file_name = self.get_save_input
+
+        File.open(file_name, "w") { |file| file.write(@board.to_yaml) }
+    end
+
+    def get_save_input
+        puts "\nReady to save..."
+        puts "What would you like to name the file?"
+
+        file_name = gets.chomp
+        puts "Ok! The game is saved to a file called #{file_name}"
+
+        file_name += '.yml'
+
+
+        file_name
+    end
 end
 
 game = Game.new
+game.save
