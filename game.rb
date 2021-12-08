@@ -21,6 +21,7 @@ class Game
         puts "Please enter the name of the game file you'd like to load. (e.g. my-game-1)"
 
         input = gets.chomp.downcase
+        input += '.yml' unless input.end_with?('.yml')
 
         begin
             board_yml = File.read(input)
