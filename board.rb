@@ -42,10 +42,13 @@ class Board
     end
 
     def play
+        puts "-------------------------"
         puts "\nWelcome to Minesweeper! There are #{@grid.length} bombs. Good luck!\n"
+        self.render
+
         until self.game_won?
-            self.render
-            self.make_move
+            move = self.make_move
+            self.render if move
 
             if self.game_lost?
                 self.render
@@ -194,5 +197,4 @@ class Board
 end
 
 board = Board.new(9)
-p board.test_show_mines
 board.play

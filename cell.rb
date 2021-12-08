@@ -39,6 +39,8 @@ class Cell
         else
             @is_flagged = !@is_flagged
         end
+
+        true
     end
 
     def add_mine
